@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:notification/interface.dart';
 
-class AlertDialog extends StatefulWidget {
-  const AlertDialog({Key? key}) : super(key: key);
+import 'debug_print.dart';
+
+class AlertDialogCustom extends StatefulWidget {
+  const AlertDialogCustom({Key? key}) : super(key: key);
 
   @override
-  State<AlertDialog> createState() => _AlertDialogState();
+  State<AlertDialogCustom> createState() => _AlertDialogCustomState();
 }
 
-class _AlertDialogState extends State<AlertDialog> {
+class _AlertDialogCustomState extends State<AlertDialogCustom> with Interface{
   @override
   Widget build(BuildContext context) {
-    return const AlertDialog(
-
+    return AlertDialog(
+      content: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InkWell(
+                onTap: yesFunction,
+                child: Text("Yes")),
+            InkWell(
+                onTap:noFunction,
+                child: Text("No"))
+          ],
+        ),
+      ),
     );
   }
+
+
+
+
 }

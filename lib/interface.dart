@@ -1,4 +1,4 @@
 abstract class Interface{
-  void yesFunction();
-  void noFunction();
+   void yesFunction(){}
+   void noFunction(){}
 }
