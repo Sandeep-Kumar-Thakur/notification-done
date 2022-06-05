@@ -1,6 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:notification/debug_print.dart';
+import 'package:notification/second_screen.dart';
 // ignore: slash_for_doc_comments
 /**
  * Documents added by Alaa, enjoy ^-^:
@@ -33,27 +38,30 @@ class PushNotificationService {
     // If you want to handle a notification click when the app is terminated, you can use `getInitialMessage`
     // to get the initial message, and depending in the remoteMessage, you can decide to handle the click
     // This function can be called from anywhere in your app, there is an example in main file.
-    // RemoteMessage initialMessage =
+    // RemoteMessage? initialMessage =
     //     await FirebaseMessaging.instance.getInitialMessage();
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-    // if (initialMessage != null && initialMessage.data['type'] == 'chat') {
-    // Navigator.pushNamed(context, '/chat',
-    //     arguments: ChatArguments(initialMessage));
+    // // If the message also contains a data property with a "type" of "chat",
+    // // navigate to a chat screen
+    // if (initialMessage != null && initialMessage.data['key'] == 'background') {
+    //   consolePrint(label: "data",data: initialMessage.data.toString());
+    //   Get.to(()=>Second());
     // }
 // Also handle any interaction when the app is in the background via a
     // Stream listener
     // This function is called when the app is in the background and user clicks on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // Get.toNamed(NOTIFICATIOINS_ROUTE);
-      if (message.data['type'] == 'chat') {
-        // Navigator.pushNamed(context, '/chat',
-        //     arguments: ChatArguments(message));
+      consolePrint(label: message.toMap().toString());
+      if(message.data['key']=="second"){
+        consolePrint(label: "third");
+
+        Get.to(()=>Second());
       }
     });
     await enableIOSNotifications();
     await registerNotificationListeners();
   }
+
   registerNotificationListeners() async {
     AndroidNotificationChannel channel = androidNotificationChannel();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -70,15 +78,20 @@ class PushNotificationService {
     );
     var initSetttings =
     InitializationSettings(android: androidSettings, iOS: iOSSettings);
-    flutterLocalNotificationsPlugin.initialize(initSetttings,
-        onSelectNotification: (message) async {
+    flutterLocalNotificationsPlugin.initialize(initSetttings, onSelectNotification: (message) async {
+      consolePrint(label: "Foreground On Tap "+message!);
           // This function handles the click in the notification when the app is in foreground
           // Get.toNamed(NOTIFICATIOINS_ROUTE);
         });
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+      consolePrint(label: "second");
+      if(message?.data['key']=="second"){
+        Get.to(()=>Second());
+      }
+
+
       // Get.find<HomeController>().getNotificationsNumber();
-      print(message);
       RemoteNotification? notification = message!.notification;
       AndroidNotification? android = message.notification?.android;
 // If `onMessage` is triggered with a notification, construct our own
@@ -99,6 +112,7 @@ class PushNotificationService {
         );
       }
     });
+
   }
   enableIOSNotifications() async {
     await FirebaseMessaging.instance
@@ -114,3 +128,34 @@ class PushNotificationService {
     importance: Importance.max,
   );
 }
+/// In background this function will work
+/// do it on splash
+checkSplash()async{
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+  // If the message also contains a data property with a "type" of "chat",
+  // navigate to a chat screen
+  if (initialMessage != null && initialMessage.data['key'] == 'background') {
+    consolePrint(label: "data",data: initialMessage.data.toString());
+    Get.to(()=>Second());
+  }
+}
+
+///data is important when you want notification in your app in background and terminate state
+///
+/// Important
+/// api structure for notification
+//{
+//   "to" : "dP9do6SmQpO35uorRVuarV:APA91bHVZy3V2eZnECc3UoHdf9ZhU1tna_EpVFBAEgAjCV_PC39iK5DxHCXoRS2EcvNpyRiC-zKXoxRLVZHF3SkBGiny1zxm6xptsAlui4DyQTY7iGWtGWXG6ie04p7F5ZZ4IUj6bNeN",
+//   "collapse_key" : "type_a",
+//   "priority": 10,
+//   "data" : {
+//     "body" : "Notification",
+//     "title": "Notification title",
+//     "key":"background"
+//     },
+//     "notification":{
+//       "title":"Hi from Postman ",
+//       "body":"great match!"
+//     }
+// }

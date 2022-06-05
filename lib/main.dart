@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:notification/Notification/call_back.dart';
 import 'package:notification/alert.dart';
 import 'package:notification/debug_print.dart';
 import 'package:notification/interface.dart';
+import 'package:notification/second_screen.dart';
 
 import 'Notification/notification.dart';
 
@@ -39,9 +41,35 @@ class _MyappState extends State<Myapp> {
   }
 }
 
-class MyHomePage extends StatelessWidget implements Interface{
+class MyHomePage extends StatefulWidget{
    MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> with Interface {
+
  late String name1;
+
+ @override
+ void initState() {
+   checkSplash();
+   super.initState();
+
+ }
+
+ checkSplash()async{
+   RemoteMessage? initialMessage =
+       await FirebaseMessaging.instance.getInitialMessage();
+   // If the message also contains a data property with a "type" of "chat",
+   // navigate to a chat screen
+   if (initialMessage != null && initialMessage.data['key'] == 'background') {
+     consolePrint(label: "data",data: initialMessage.data.toString());
+     Get.to(()=>Second());
+   }
+ }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +86,7 @@ class MyHomePage extends StatelessWidget implements Interface{
               height: 20,
             ),
             MaterialButton(onPressed: (){
-              showDialog(context: context, builder: (context)=>AlertDialogCustom());
+              showDialog(context: context, builder: (context)=>AlertDialogCustom(interface: this,));
             },child: Text("GO"),)
           ],
         ),
@@ -78,4 +106,6 @@ class MyHomePage extends StatelessWidget implements Interface{
 
     // TODO: implement yesFunction
   }
+
+
 }

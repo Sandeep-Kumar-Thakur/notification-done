@@ -4,13 +4,14 @@ import 'package:notification/interface.dart';
 import 'debug_print.dart';
 
 class AlertDialogCustom extends StatefulWidget {
-  const AlertDialogCustom({Key? key}) : super(key: key);
+  Interface interface;
 
+  AlertDialogCustom({Key? key,required this.interface}) : super(key: key);
   @override
   State<AlertDialogCustom> createState() => _AlertDialogCustomState();
 }
 
-class _AlertDialogCustomState extends State<AlertDialogCustom> with Interface{
+class _AlertDialogCustomState extends State<AlertDialogCustom>{
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -19,10 +20,20 @@ class _AlertDialogCustomState extends State<AlertDialogCustom> with Interface{
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-                onTap: yesFunction,
+                onTap:() {
+                  widget.interface.yesFunction();
+                  consolePrint(label: "yes");
+                  Navigator.pop(context);
+
+                },
                 child: Text("Yes")),
             InkWell(
-                onTap:noFunction,
+                onTap:() {
+                  widget.interface.noFunction();
+                  consolePrint(label: "no");
+                  Navigator.pop(context);
+
+                },
                 child: Text("No"))
           ],
         ),
