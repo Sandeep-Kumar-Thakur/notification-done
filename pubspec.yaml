@@ -38,6 +38,7 @@ dependencies:
   flutter_local_notifications:
   firebase_messaging:
   firebase_core:
+  country_code_picker: 
 
 dev_dependencies:
   flutter_test:
