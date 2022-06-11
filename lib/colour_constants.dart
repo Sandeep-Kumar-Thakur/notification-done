@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ColorConstants{
-  static final bookysTextMain = Colors.blue;
-  static final pageViewIndicatorGray = Colors.blue;
-  static final bookysMain = Colors.blue;
-  static final offWhite = Colors.blue;
+  static const bookysTextMain = Colors.blue;
+  static const pageViewIndicatorGray = Colors.blue;
+  static const bookysMain = Colors.blue;
+  static const offWhite = Colors.blue;
 }
