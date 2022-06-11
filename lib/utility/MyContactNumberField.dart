@@ -42,31 +42,31 @@ class MyContactNumberField extends StatelessWidget {
         maxLines: 1,
         maxLength: 14,
         style:
-            TextStyle(color: ColorConstants.bookysTextMain, fontSize: 14.0.sp),
+            TextStyle(color: ColorConstants.bookysTextMain, fontSize: 14.0),
         maxLengthEnforcement: MaxLengthEnforcement.enforced,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.only(top: 0.95.sp / 4),
+          contentPadding: EdgeInsets.only(top: 0.95 / 4),
           counterStyle: TextStyle(
             height: double.minPositive,
           ),
           counterText: "",
-          labelText: StringConstants.MOBILE_NUMBER.tr,
+          labelText: "Phone number",
           labelStyle: TextStyle(
               color: companyPhoneFocus.hasFocus
                   ? ColorConstants.bookysMain
                   : ColorConstants.pageViewIndicatorGray,
-              fontSize: 14.0.sp),
+              fontSize: 14.0),
           prefixIcon: Container(
             padding: EdgeInsets.only(left: 10),
-            width: 0.34.sw,
+            width: 0.34,
             child: Row(
               children: [
                 Icon(
                   Icons.call_outlined,
-                  size: CommonDimens.textFieldPrefixSize,
+                  size: 12,
                   color: companyPhoneFocus.hasFocus
                       ? ColorConstants.bookysMain
                       : controller.text.length > 0
@@ -86,21 +86,21 @@ class MyContactNumberField extends StatelessWidget {
           ),
           hintText: "mobile number",
           hintStyle: TextStyle(
-              color: ColorConstants.pageViewIndicatorGray, fontSize: 14.0.sp),
+              color: ColorConstants.pageViewIndicatorGray, fontSize: 14.0),
           border: OutlineInputBorder(
             borderRadius:
-                BorderRadius.all(Radius.circular(CommonDimens.textFieldRadius)),
+                BorderRadius.all(Radius.circular(1)),
             borderSide: BorderSide(
                 color: ColorConstants.pageViewIndicatorGray, width: 1.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(
-                Radius.circular(CommonDimens.textFieldEnabledRadius)),
+                Radius.circular(2)),
             borderSide: BorderSide(color: ColorConstants.offWhite, width: 1.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(
-                Radius.circular(CommonDimens.textFieldFocusRadius)),
+                Radius.circular(2)),
             borderSide:
                 BorderSide(color: ColorConstants.bookysMain, width: 1.0),
           ),
