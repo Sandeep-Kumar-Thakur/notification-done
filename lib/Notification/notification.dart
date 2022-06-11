@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:notification/debug_print.dart';
 import 'package:notification/second_screen.dart';
+
 // ignore: slash_for_doc_comments
 /**
  * Documents added by Alaa, enjoy ^-^:
@@ -51,11 +52,12 @@ class PushNotificationService {
     // This function is called when the app is in the background and user clicks on the notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // Get.toNamed(NOTIFICATIOINS_ROUTE);
-      consolePrint(label: message.toMap().toString());
-      if(message.data['key']=="second"){
+      consolePrint(
+          label: "notificationData ", data: message.toMap().toString());
+      if (message.data['key'] == "second") {
         consolePrint(label: "third");
 
-        Get.to(()=>Second());
+        Get.to(() => Second());
       }
     });
     await enableIOSNotifications();
@@ -65,10 +67,10 @@ class PushNotificationService {
   registerNotificationListeners() async {
     AndroidNotificationChannel channel = androidNotificationChannel();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+        FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
     var androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     var iOSSettings = IOSInitializationSettings(
@@ -77,22 +79,22 @@ class PushNotificationService {
       requestAlertPermission: false,
     );
     var initSetttings =
-    InitializationSettings(android: androidSettings, iOS: iOSSettings);
-    flutterLocalNotificationsPlugin.initialize(initSetttings, onSelectNotification: (message) async {
-      consolePrint(label: "Foreground On Tap "+message!);
-          // This function handles the click in the notification when the app is in foreground
-          // Get.toNamed(NOTIFICATIOINS_ROUTE);
-        });
+        InitializationSettings(android: androidSettings, iOS: iOSSettings);
+    flutterLocalNotificationsPlugin.initialize(initSetttings,
+        onSelectNotification: (message) async {
+      consolePrint(label: "Foreground On Tap " + message!);
+      // This function handles the click in the notification when the app is in foreground
+      // Get.toNamed(NOTIFICATIOINS_ROUTE);
+    });
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
-      consolePrint(label: "second");
-      if(message?.data['key']=="second"){
-        Get.to(()=>Second());
+      consolePrint(label: "second", data: message!.toMap().toString());
+      if (message.data['key'] == "second") {
+        Get.to(() => Second());
       }
 
-
       // Get.find<HomeController>().getNotificationsNumber();
-      RemoteNotification? notification = message!.notification;
+      RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 // If `onMessage` is triggered with a notification, construct our own
       // local notification to show to users using the created channel.
@@ -112,8 +114,8 @@ class PushNotificationService {
         );
       }
     });
-
   }
+
   enableIOSNotifications() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
@@ -122,22 +124,24 @@ class PushNotificationService {
       sound: true,
     );
   }
+
   androidNotificationChannel() => AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title// description
-    importance: Importance.max,
-  );
+        'high_importance_channel', // id
+        'High Importance Notifications', // title// description
+        importance: Importance.max,
+      );
 }
+
 /// In background this function will work
 /// do it on splash
-checkSplash()async{
+checkSplash() async {
   RemoteMessage? initialMessage =
-  await FirebaseMessaging.instance.getInitialMessage();
+      await FirebaseMessaging.instance.getInitialMessage();
   // If the message also contains a data property with a "type" of "chat",
   // navigate to a chat screen
   if (initialMessage != null && initialMessage.data['key'] == 'background') {
-    consolePrint(label: "data",data: initialMessage.data.toString());
-    Get.to(()=>Second());
+    consolePrint(label: "data", data: initialMessage.data.toString());
+    Get.to(() => Second());
   }
 }
 
@@ -145,8 +149,8 @@ checkSplash()async{
 ///
 /// Important
 /// api structure for notification
-//{
-//   "to" : "dP9do6SmQpO35uorRVuarV:APA91bHVZy3V2eZnECc3UoHdf9ZhU1tna_EpVFBAEgAjCV_PC39iK5DxHCXoRS2EcvNpyRiC-zKXoxRLVZHF3SkBGiny1zxm6xptsAlui4DyQTY7iGWtGWXG6ie04p7F5ZZ4IUj6bNeN",
+// {
+//   "to" : "eADebHzUQgiHtrgJtkwMyp:APA91bGJj825DPLjDVM2-tGhejso3e4p_moo65bo_C6gFqrKBxsGMciboXs2Yh3ihrJuftDPlBK_evxk1yl8U9iEtxqiPuyA9U7yIRwugH6ImKMPoculQyxaHH7W9XmjwYF5Ifye4GjG",
 //   "collapse_key" : "type_a",
 //   "priority": 10,
 //   "data" : {
@@ -158,4 +162,50 @@ checkSplash()async{
 //       "title":"Hi from Postman ",
 //       "body":"great match!"
 //     }
+// }
+///receive data into message
+///theory:
+///when open doesn't open after click on notification. It's because of "collapseKey"  which we receive in message object
+///collapseKey contain application id so that with the help of that application got open
+//  {
+//   "senderId": "null",
+//   "category": "null",
+//   "collapseKey": "com.example.notification",
+//   "contentAvailable": "false",
+//   "data": {
+//     "body": "Notification",
+//     "title": "Notification title",
+//     "key": "background"
+//   },
+//   "from": "195859514104",
+//   "messageId": "0:1654954051033981%7cc2053c7cc2053c",
+//   "messageType": "null",
+//   "mutableContent": false,
+//   "notification": {
+//     "title": "Hi from Postman",
+//     "titleLocArgs": [],
+//     "titleLocKey": null,
+//     "body": " great match!",
+//     "bodyLocArgs": [],
+//     "bodyLocKey": "null",
+//     "android": {
+//       "channelId": null,
+//       "clickAction": null,
+//       "color": null,
+//       "count": null,
+//       "imageUrl": null,
+//       "link": null,
+//       "priority": 0,
+//       "smallIcon": null,
+//       "sound": null,
+//       "ticker": null,
+//       "tag": null,
+//       "visibility": 0
+//     },
+//     "apple": null,
+//     "web": null
+//   },
+//   "sentTime": 1654954051016,
+//   "threadId": null,
+//   "ttl": 2419200
 // }
