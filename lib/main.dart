@@ -9,6 +9,7 @@ import 'package:notification/interface.dart';
 import 'package:notification/second_screen.dart';
 
 import 'Notification/notification.dart';
+import 'map/map_screen.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,7 +89,10 @@ class _MyHomePageState extends State<MyHomePage> with Interface {
             ),
             MaterialButton(onPressed: (){
               showDialog(context: context, builder: (context)=>AlertDialogCustom(interface: this,));
-            },child: Text("GO"),)
+            },child: Text("GO"),),
+            MaterialButton(onPressed: (){
+             Navigator.push(context,MaterialPageRoute(builder: (context)=>MapSample()));
+            },child: Text("MAP"),),
           ],
         ),
       ),

@@ -39,7 +39,9 @@ dependencies:
   firebase_messaging:
   firebase_core:
   country_code_picker:
-  http: 
+  http:
+  google_maps_flutter:
+  geolocator:
 
 dev_dependencies:
   flutter_test:
